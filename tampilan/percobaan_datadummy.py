@@ -13,17 +13,19 @@ center = (screen_size // 2, screen_size // 2)
 screen = pygame.display.set_mode((screen_size, screen_size))
 pygame.display.set_caption('Vehicle Position Radar')
 
-# Colors
+# Colors and font
 black = (0, 0, 0)
 green = (0, 255, 0)
 dark_green = (0, 100, 0)
-
-# Font for coordinates
-font = pygame.font.SysFont('arial', 16)  # Choose an available font and size
+font = pygame.font.SysFont('arial', 16)
 
 # Simulation variables
 sweep_angle = 0
 sweep_speed = 0.5  # degrees per frame
+
+# Function to calculate distance
+def calculate_distance(p1, p2):
+    return math.sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2)
 
 # Main loop
 running = True
@@ -32,36 +34,32 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Clear screen
     screen.fill(black)
 
     # Draw radar circles
     for radius in range(50, 250, 50):
         pygame.draw.circle(screen, dark_green, center, radius, 1)
-    
-    # Draw radar sweep
+
+    # Radar sweep
     radians = math.radians(sweep_angle)
     end_point = (center[0] + math.sin(radians) * 200, center[1] - math.cos(radians) * 200)
     pygame.draw.line(screen, green, center, end_point, 2)
     sweep_angle = (sweep_angle + sweep_speed) % 360
     
-    # Simulated vehicle positions (replace with real data)
-    vehicle_positions = [
-        (center[0] + 100, center[1]),  # Vehicle 1
-        (center[0], center[1] - 150),  # Vehicle 2
-    ]
+    # Simulated vehicle positions
+    vehicle_positions = [(center[0] + 100, center[1]), (center[0], center[1] - 150)]
 
-    # Draw vehicle positions and coordinates
+    # Draw vehicles and calculate distances
     for pos in vehicle_positions:
         pygame.draw.circle(screen, green, pos, 5)
-        # Render coordinates as text
-        coordinates_text = f"{pos[0]},{pos[1]}"
-        text_surface = font.render(coordinates_text, True, green)
-        screen.blit(text_surface, (pos[0] - 20, pos[1] - 25))  # Adjust as needed
-    
-    # Update display
+        distance = calculate_distance(center, pos)
+        # Display coordinates and distance
+        text = f"{pos[0]},{pos[1]} Jarak: {distance:.2f}"
+        text_surface = font.render(text, True, green)
+        screen.blit(text_surface, (pos[0] + 10, pos[1] - 25))  # Adjust text position
+
     pygame.display.flip()
-    time.sleep(0.01)  # Adjust for desired sweep speed
+    time.sleep(0.01)
 
 pygame.quit()
 sys.exit()
