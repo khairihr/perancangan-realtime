@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_b4e60ad3e04538f7eb016945a69f910d {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_b4e60ad3e04538f7eb016945a69f910d" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_b4e60ad3e04538f7eb016945a69f910d = L.map(
+                "map_b4e60ad3e04538f7eb016945a69f910d",
+                {
+                    center: [-6.9727, 107.6316],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 15,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_1f17f8d9f4aeac73281a194ce3b26c05 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_1f17f8d9f4aeac73281a194ce3b26c05.addTo(map_b4e60ad3e04538f7eb016945a69f910d);
+        
+    
+            var marker_f19d9677ad1133f88f2c3b95faf56340 = L.marker(
+                [-6.9727, 107.6316],
+                {}
+            ).addTo(map_b4e60ad3e04538f7eb016945a69f910d);
+        
+    
+            var icon_c9b6757e9a8dc019e3b430f30b0df2d6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f19d9677ad1133f88f2c3b95faf56340.setIcon(icon_c9b6757e9a8dc019e3b430f30b0df2d6);
+        
+    
+        var popup_f463a8a3c34ef883903efc4885d24624 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_9575610cd39cf5fb5a264b94d014c8e9 = $(`<div id="html_9575610cd39cf5fb5a264b94d014c8e9" style="width: 100.0%; height: 100.0%;">Kendaraan Anda</div>`)[0];
+                popup_f463a8a3c34ef883903efc4885d24624.setContent(html_9575610cd39cf5fb5a264b94d014c8e9);
+            
+        
+
+        marker_f19d9677ad1133f88f2c3b95faf56340.bindPopup(popup_f463a8a3c34ef883903efc4885d24624)
+        ;
+
+        
+    
+    
+            var marker_4c66e41471e60e24a2b2f60a6d556f10 = L.marker(
+                [-6.974, 107.63],
+                {}
+            ).addTo(map_b4e60ad3e04538f7eb016945a69f910d);
+        
+    
+            var icon_1111c7095f8143d705a0b47de93111b4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_4c66e41471e60e24a2b2f60a6d556f10.setIcon(icon_1111c7095f8143d705a0b47de93111b4);
+        
+    
+        var popup_a0acc49e9b8a18ddc9606b73c02d4189 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_565e772d6751a0122c314cc800f14878 = $(`<div id="html_565e772d6751a0122c314cc800f14878" style="width: 100.0%; height: 100.0%;">Jarak: 227.88 m</div>`)[0];
+                popup_a0acc49e9b8a18ddc9606b73c02d4189.setContent(html_565e772d6751a0122c314cc800f14878);
+            
+        
+
+        marker_4c66e41471e60e24a2b2f60a6d556f10.bindPopup(popup_a0acc49e9b8a18ddc9606b73c02d4189)
+        ;
+
+        
+    
+    
+            var marker_40981a38d9ce5e7df5471378269f7b70 = L.marker(
+                [-6.975, 107.631],
+                {}
+            ).addTo(map_b4e60ad3e04538f7eb016945a69f910d);
+        
+    
+            var icon_3277af0cd82a9267dd67c2ec6f45fc33 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_40981a38d9ce5e7df5471378269f7b70.setIcon(icon_3277af0cd82a9267dd67c2ec6f45fc33);
+        
+    
+        var popup_1cf0fdf8dcd1c87167e5636f482d1d8e = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_a84cea77411bb4661308f9f2a84849e1 = $(`<div id="html_a84cea77411bb4661308f9f2a84849e1" style="width: 100.0%; height: 100.0%;">Jarak: 262.86 m</div>`)[0];
+                popup_1cf0fdf8dcd1c87167e5636f482d1d8e.setContent(html_a84cea77411bb4661308f9f2a84849e1);
+            
+        
+
+        marker_40981a38d9ce5e7df5471378269f7b70.bindPopup(popup_1cf0fdf8dcd1c87167e5636f482d1d8e)
+        ;
+
+        
+    
+</script>
+</html>
