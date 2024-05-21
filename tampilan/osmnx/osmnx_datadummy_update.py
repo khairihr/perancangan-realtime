@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from geopy.distance import geodesic
 import os
 import pickle
+import time
 
 # Function to convert DMS to DD
 def dms_to_dd(d, m, s, direction):
@@ -53,6 +54,7 @@ def get_vehicle_coordinates():
 def fetch_or_load_map(location_point, dist=1000):
     """
     Fetch the map from OSMnx or load it from a local file if already downloaded.
+    Measure and print the time taken for each operation.
 
     Parameters:
     location_point (tuple): Coordinates of the location point
@@ -64,14 +66,18 @@ def fetch_or_load_map(location_point, dist=1000):
     map_filename = 'map_network.pkl'
 
     if os.path.exists(map_filename):
+        start_time = time.time()
         with open(map_filename, 'rb') as file:
             G = pickle.load(file)
-        print("Map loaded from local file.")
+        end_time = time.time()
+        print(f"Map loaded from local file in {end_time - start_time:.2f} seconds.")
     else:
+        start_time = time.time()
         G = ox.graph_from_point(location_point, dist=dist, dist_type='bbox', network_type='drive')
         with open(map_filename, 'wb') as file:
             pickle.dump(G, file)
-        print("Map downloaded and saved locally.")
+        end_time = time.time()
+        print(f"Map downloaded and saved locally in {end_time - start_time:.2f} seconds.")
 
     return G
 
