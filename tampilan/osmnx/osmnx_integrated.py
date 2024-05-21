@@ -10,7 +10,7 @@ from geopy.distance import geodesic
 import os
 import pickle
 
-# Fungsi untuk membaca data GPS
+# Function to read GPS data
 def get_gps_data():
     """
     Get GPS data from Neo6MV2.
