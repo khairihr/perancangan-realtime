@@ -1,0 +1,10 @@
+CREATE DATABASE vehicle_data;
+
+USE vehicle_data;
+
+CREATE TABLE gps_data (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    latitude FLOAT(10, 6),
+    longitude FLOAT(10, 6),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
