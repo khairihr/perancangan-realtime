@@ -8,7 +8,7 @@ port = "/dev/serial0"
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="raspberry",
+    password="raspbian",
     database="capstone"
 )
 cursor = db.cursor()
@@ -39,16 +39,19 @@ def parseGPS(data, file):
         dirLon = sdata[6]       # longitude direction E/W
         speed_knots = float(sdata[7])  # Speed in knots
         speed_kmh = speed_knots * 1.852  # Convert knots to km/h
-        trCourse = sdata[8]     # True course
 
         # Write to file
-        output = f"{date_str},{time_str},{lat}({dirLat}),{lon}({dirLon}),{speed_kmh:.2f}"
+        output = "{},{},{},{}({}),{}({}),{:.2f}".format(date_str, time_str, lat, dirLat, lon, dirLon, speed_kmh)
+        #output = "%s,%s,%s(%s),%s(%s),%.2f" % (date_str, time_str, lat, dirLat, lon, dirLon, speed_kmh)
+
         print(output)
         file.write(output + "\n")
 
         # Store in MySQL database
         sql = "INSERT INTO selfgps (date, time, latitude, longitude, speed) VALUES (%s, %s, %s, %s, %s)"
-        val = (date_str, gmt7_time, lat, lon, f"{speed_kmh:.2f}")
+        val = (date_str, gmt7_time, lat, lon, "{:.2f}".format(speed_kmh))
+        #val = (date_str, gmt7_time, lat, lon, "%.2f" % speed_kmh)
+
         cursor.execute(sql, val)
         db.commit()
 
