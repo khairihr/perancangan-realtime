@@ -6,16 +6,19 @@ def get_vehicle_coordinates():
     connection = pymysql.connect(host='localhost', user='root', password='raspbian', db='capstone')
     try:
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-            # Mengambil 3 entri terbaru dari tabel gps_data
-            cursor.execute("SELECT latitude, longitude FROM gps_data ORDER BY id DESC LIMIT 3")
-            result = cursor.fetchall()
-            if len(result) < 3:
-                raise ValueError("Tidak cukup data untuk menampilkan kendaraan pengguna dan kendaraan lain.")
+            # Mengambil data terbaru dari tabel selfgps untuk kendaraan pengguna
+            cursor.execute("SELECT latitude, longitude FROM selfgps ORDER BY date DESC, time DESC LIMIT 1")
+            result_user = cursor.fetchone()
+            if result_user is None:
+                raise ValueError("Tidak ada data untuk kendaraan pengguna.")
+            user_vehicle = (float(result_user['latitude']), float(result_user['longitude']))
             
-            # Entri pertama dianggap sebagai koordinat kendaraan pengguna
-            user_vehicle = (float(result[0]['latitude']), float(result[0]['longitude']))
-            # Dua entri berikutnya dianggap sebagai koordinat kendaraan lain
-            vehicles_positions = [(float(row['latitude']), float(row['longitude'])) for row in result[1:]]
+            # Mengambil data dari tabel gps_data untuk kendaraan lain
+            cursor.execute("SELECT latitude, longitude FROM gps_data ORDER BY date DESC, time DESC LIMIT 3")
+            result_others = cursor.fetchall()
+            if len(result_others) < 1:
+                raise ValueError("Tidak ada data untuk kendaraan lain.")
+            vehicles_positions = [(float(row['latitude']), float(row['longitude'])) for row in result_others]
         return user_vehicle, vehicles_positions
     finally:
         connection.close()
