@@ -3,13 +3,13 @@ from geopy.distance import geodesic
 import pymysql
 
 def get_vehicle_coordinates():
-    connection = pymysql.connect(host='localhost', user='root', password='password', db='vehicle_data')
+    connection = pymysql.connect(host='localhost', user='root', password='raspbian', db='capstone')
     try:
-        with connection.cursor() as cursor:
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute("SELECT latitude, longitude FROM gps_data ORDER BY id DESC LIMIT 3")
             result = cursor.fetchall()
-            user_vehicle = (result[0]['latitude'], result[0]['longitude'])
-            vehicles_positions = [(row['latitude'], row['longitude']) for row in result[1:]]
+            user_vehicle = (float(result[0]['latitude']), float(result[0]['longitude']))
+            vehicles_positions = [(float(row['latitude']), float(row['longitude'])) for row in result[1:]]
         return user_vehicle, vehicles_positions
     finally:
         connection.close()
