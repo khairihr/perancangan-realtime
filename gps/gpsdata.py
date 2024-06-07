@@ -13,7 +13,7 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor()
 
-def parseGPS(data, file):
+def parseGPS(data):
     if data.startswith("$GPRMC"):
         sdata = data.split(",")
         if sdata[2] == 'V':
@@ -45,7 +45,9 @@ def parseGPS(data, file):
         #output = "%s,%s,%s(%s),%s(%s),%.2f" % (date_str, time_str, lat, dirLat, lon, dirLon, speed_kmh)
 
         print(output)
-        file.write(output + "\n")
+        f = open("/home/pi/gps.txt", "w")
+        f.write(output + "\n")
+        f.close()
 
         # Store in MySQL database
         sql = "INSERT INTO selfgps (date, time, latitude, longitude, speed) VALUES (%s, %s, %s, %s, %s)"
@@ -66,13 +68,9 @@ def decode(coord):
 
 print("Receiving GPS data")
 ser = serial.Serial(port, baudrate=9600, timeout=0.5)
-
-# Open the file in write mode to overwrite the data
-with open("/home/pi/gps.txt", "w") as file:
-    while True:
-        data = ser.readline().decode('ascii', errors='ignore').strip()
-        if data:
-            parseGPS(data, file)
+while True:
+    data = ser.readline().decode('ascii', errors='ignore').strip()
+    parseGPS(data)
 
 # Close MySQL connection
 cursor.close()
