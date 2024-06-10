@@ -40,9 +40,14 @@ def parseGPS(data):
         speed_knots = float(sdata[7])  # Speed in knots
         speed_kmh = speed_knots * 1.852  # Convert knots to km/h
 
+        if dirLat in ['S']:
+            lat = -lat
+        
+        if dirLon in ['W']:
+            lot = -lot
+
         # Write to file
-        output = "{},{},{},{}({}),{}({}),{:.2f}".format(date_str, time_str, lat, dirLat, lon, dirLon, speed_kmh)
-        #output = "%s,%s,%s(%s),%s(%s),%.2f" % (date_str, time_str, lat, dirLat, lon, dirLon, speed_kmh)
+        output = ('%s,%s,%s,%s,%f') %  (date_str, time_str, lat, lon, speed_kmh)
 
         print(output)
         f = open("/home/pi/gps.txt", "w")
@@ -51,8 +56,7 @@ def parseGPS(data):
 
         # Store in MySQL database
         sql = "INSERT INTO selfgps (date, time, latitude, longitude, speed) VALUES (%s, %s, %s, %s, %s)"
-        val = (date_str, gmt7_time, lat, lon, "{:.2f}".format(speed_kmh))
-        #val = (date_str, gmt7_time, lat, lon, "%.2f" % speed_kmh)
+        val = (date_str, time_str, lat, lon, speed_kmh)
 
         cursor.execute(sql, val)
         db.commit()
@@ -64,12 +68,15 @@ def decode(coord):
     tail = x[1]
     deg = head[0:-2]
     min = head[-2:]
-    return deg + " deg " + min + "." + tail + " min"
+    minute = float("{}.{}".format(min, tail))
+    degree = float(deg) + (minute / 60.00)
+    return degree
+    # return deg + " deg " + min + "." + tail + " min"
 
 print("Receiving GPS data")
 ser = serial.Serial(port, baudrate=9600, timeout=0.5)
 while True:
-    data = ser.readline().decode('ascii', errors='ignore').strip()
+    data = ser.readline()
     parseGPS(data)
 
 # Close MySQL connection
