@@ -1,0 +1,37 @@
+/* style.css */
+#map {
+    height: 400px; /* Atur tinggi peta sesuai kebutuhan */
+    width: 100%;   /* Lebar peta memenuhi container */
+}
+
+.leaflet-popup-content {
+    font-size: 14px; /* Ukuran font konten popup */
+}
+
+/* Styling untuk notifikasi bahaya */
+.hazard-notification {
+    background-color: yellow;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000; /* Pastikan notifikasi berada di atas peta */
+}
+
+/* Styling untuk tombol */
+button {
+    background-color: #4CAF50; /* Hijau */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px; /* Sudut membulat */
+}
