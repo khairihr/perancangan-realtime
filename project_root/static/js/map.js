@@ -19,8 +19,8 @@ fetch('/get_positions')
         return response.json();
     })
     .then(data => {
-        // Atur tampilan awal peta berdasarkan posisi kendaraan pengguna
         if (data && data.user && data.others) {
+            // Atur tampilan awal peta berdasarkan posisi kendaraan pengguna
             map.setView([data.user.latitude, data.user.longitude], 13); 
 
             // Simpan riwayat data awal
@@ -39,7 +39,6 @@ fetch('/get_positions')
         console.error("Error fetching data from server:", error);
         // Tambahkan penanganan error yang sesuai (misalnya, tampilkan pesan kesalahan di UI)
     });
-
 
 // Fungsi untuk memeriksa potensi bahaya
 function checkPotentialHazard(userVehicle, otherVehicles) {
@@ -60,15 +59,30 @@ function checkPotentialHazard(userVehicle, otherVehicles) {
 
 // Fungsi untuk memperbarui posisi marker dan menyimpan riwayat
 function updateMap(data) {
-    for (const vehicle of [data.user, ...data.others]) {
+    // Update atau buat marker untuk kendaraan pengguna
+    let userMarker = markers[data.user.node];
+    if (!userMarker) {
+        const userIcon = L.divIcon({
+            className: 'user-vehicle-marker',
+            iconSize: [20, 20], // Ukuran ikon
+            html: '<div style="background-color: blue; width: 100%; height: 100%; border-radius: 50%;"></div>'
+        });
+        userMarker = L.marker([data.user.latitude, data.user.longitude], { icon: userIcon }).addTo(map);
+        markers[data.user.node] = userMarker;
+    }
+    userMarker.setLatLng([data.user.latitude, data.user.longitude]);
+    userMarker.bindPopup(`User Vehicle<br>Speed: ${data.user.speed} m/s<br>Last Update: ${data.user.time}`); // Tambahkan popup untuk marker pengguna
+
+    // Update atau buat marker untuk kendaraan lain
+    data.others.forEach(vehicle => {
         let marker = markers[vehicle.node];
         if (!marker) {
-            // Tentukan ikon marker berdasarkan jenis kendaraan (user atau others)
-            const icon = L.icon({
-                iconUrl: vehicle.node === data.user.node ? 'https://cdn-icons-png.flaticon.com/512/1828/1828961.png' : 'https://cdn-icons-png.flaticon.com/512/3127/3127899.png',
-                iconSize: [32, 32], // Ukuran ikon
+            const otherIcon = L.divIcon({
+                className: 'other-vehicle-marker',
+                iconSize: [20, 20], // Ukuran ikon
+                html: '<div style="background-color: red; width: 100%; height: 100%; border-radius: 50%;"></div>'
             });
-            marker = L.marker([vehicle.latitude, vehicle.longitude], {icon: icon}).addTo(map);
+            marker = L.marker([vehicle.latitude, vehicle.longitude], { icon: otherIcon }).addTo(map);
             markers[vehicle.node] = marker;
         }
 
@@ -89,9 +103,8 @@ function updateMap(data) {
         if (historyData[vehicle.node].length > 3) {
             historyData[vehicle.node].shift(); 
         }
-    }
+    });
 }
-
 
 // Panggil fungsi updateMap secara berkala (misalnya, setiap 5 detik)
 setInterval(() => {
@@ -100,7 +113,7 @@ setInterval(() => {
         .then(data => {
             if (data && data.user && data.others) {
                 updateMap(data);
-    
+
                 // Periksa potensi bahaya setelah update marker
                 if (checkPotentialHazard([data.user.latitude, data.user.longitude], data.others)) {
                     document.getElementById('hazard-notification').style.display = 'block';
@@ -118,3 +131,11 @@ setInterval(() => {
 }, 5000);
 
 
+// Fungsi untuk memusatkan peta ke lokasi pengguna
+function centerMapOnUser() {
+    if (markers && markers['user']) { 
+        map.setView(markers['user'].getLatLng(), 13); 
+    } else {
+        console.warn("Marker pengguna belum ada di peta.");
+    }
+}
