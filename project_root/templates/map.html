@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Peta Kendaraan Real-time</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">  </head>
+<body>
+    <div id="map"></div>
+    <div id="hazard-notification" class="hazard-notification" style="display: none;">WARNING: Potential hazard detected!</div>
+
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script> 
+</body>
+</html>

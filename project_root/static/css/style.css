@@ -1,0 +1,35 @@
+/* style.css */
+
+#map {
+    height: 400px; /* Atur tinggi peta sesuai kebutuhan */
+    width: 100%;   /* Lebar peta memenuhi container */
+}
+
+.leaflet-popup-content {
+    font-size: 14px; /* Ukuran font konten popup */
+}
+
+/* Styling untuk marker kendaraan pengguna */
+.user-vehicle-marker .leaflet-marker-icon {
+    background-color: blue; /* Warna latar belakang marker pengguna */
+    border: 2px solid white; /* Garis tepi putih untuk visibilitas */
+}
+
+/* Styling untuk marker kendaraan lain */
+.other-vehicle-marker .leaflet-marker-icon {
+    background-color: red;  /* Warna latar belakang marker kendaraan lain */
+    border: 2px solid white; /* Garis tepi putih untuk visibilitas */
+}
+
+/* Styling untuk notifikasi bahaya */
+.hazard-notification {
+    background-color: yellow;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000; /* Pastikan notifikasi berada di atas peta */
+}
