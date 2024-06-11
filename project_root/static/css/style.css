@@ -9,18 +9,6 @@
     font-size: 14px; /* Ukuran font konten popup */
 }
 
-/* Styling untuk marker kendaraan pengguna */
-.user-vehicle-marker .leaflet-marker-icon {
-    background-color: blue; /* Warna latar belakang marker pengguna */
-    border: 2px solid white; /* Garis tepi putih untuk visibilitas */
-}
-
-/* Styling untuk marker kendaraan lain */
-.other-vehicle-marker .leaflet-marker-icon {
-    background-color: red;  /* Warna latar belakang marker kendaraan lain */
-    border: 2px solid white; /* Garis tepi putih untuk visibilitas */
-}
-
 /* Styling untuk notifikasi bahaya */
 .hazard-notification {
     background-color: yellow;
@@ -32,4 +20,19 @@
     top: 10px;
     right: 10px;
     z-index: 1000; /* Pastikan notifikasi berada di atas peta */
+}
+
+/* Styling untuk tombol */
+button {
+    background-color: #4CAF50; /* Hijau */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px; /* Sudut membulat */
 }
