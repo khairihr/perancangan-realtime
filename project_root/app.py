@@ -1,18 +1,21 @@
 from flask import Flask, render_template, jsonify
 import mysql.connector
-import json
 import time
+import threading
 
 app = Flask(__name__)
 
+# Konfigurasi database (sesuaikan dengan pengaturan Anda)
+db_config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'raspbian',
+    'database': 'capstone'
+}
+
 # Fungsi untuk mengambil data posisi kendaraan dari database
 def get_positions():
-    connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="raspbian",
-        database="capstone"
-    )
+    connection = mysql.connector.connect(**db_config)
     try:
         cursor = connection.cursor(dictionary=True)
 
