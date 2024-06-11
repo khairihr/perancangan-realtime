@@ -1,0 +1,67 @@
+1. Block kernel update (https://forums.raspberrypi.com/viewtopic.php?t=281519)
+	sudo apt-mark hold libraspberrypi-bin libraspberrypi-dev libraspberrypi-doc libraspberrypi0
+	sudo apt-mark hold raspberrypi-bootloader raspberrypi-kernel raspberrypi-kernel-headers
+2. Edit sources.list file
+		sudo nano /etc/apt/sources.list
+	add repo
+		##deb http://raspbian.raspberrypi.org/raspbian/ stretch main contrib non-free rpi
+		deb http://archive.raspberrypi.org/debian/ stretch main
+		deb http://deb.debian.org/debian stretch-backports main
+		deb http://legacy.raspbian.org/raspbian/ stretch main contrib non-free rpi
+3. update - upgrade
+	sudo apt-get update
+	sudo apt-get upgrade
+4. LoRA 
+	install bcm
+		wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.50.tar.gz
+		tar zxvf bcm2835-1.50.tar.gz
+		cd bcm2835-1.50
+		./configure
+		make
+		sudo make check
+		sudo make install
+	git clone https://github.com/khairihr/perancangan-realtime.git
+	
+5. Folium
+	sudo apt-get install python3-dev python3-pip python3-rpi.gpio git
+	pip3 install RPi.GPIO spidev pymysql pynmea2 folium==0.13.0 geopy
+	sudo apt install libopenblas-dev
+	sudo apt-get install libatlas-base-dev
+
+
+6. Database
+	sudo apt-get install -y -t stretch apache2
+	sudo apt-get install -y -t stretch php7.0
+	sudo apt-get install -y -t stretch php7.0-mysql
+	sudo apt-get install -y -t stretch mysql-server mysql-client
+	sudo apt-get install -y -t stretch mysql-client
+	sudo apt install phpMyAdmin
+	pip install mysql-connector-python-rf
+	sudo apt-get install default-libmysqlclient-dev
+	
+	sudo mysql_secure_installation
+	sudo MySQL -u root -p
+	GRANT ALL PRIVILEGES on *.* to 'root'@'localhost' IDENTIFIED BY 'raspbian';
+	FLUSH PRIVILEGES;
+	/q
+	service mysql stop
+	service mysql start
+
+	sudo MySQL -u root -p
+	CREATE DATABASE capstone;
+	USE capstone;
+	CREATE TABLE selfgps ( date VARCHAR(100), time VARCHAR(100), latitude VARCHAR(100), longitude VARCHAR(100), speed VARCHAR(100));
+
+	CREATE TABLE gps_data ( date VARCHAR(100), time VARCHAR(100), node VARCHAR(100), latitude VARCHAR(100), longitude VARCHAR(100), speed VARCHAR(100));
+	
+
+7. GPS
+	sudo nano /boot/config.txt
+		core_freq=250
+		dtoverlay=pi3-disable-bt
+		force_turbo=1
+	sudo nano /boot/cmdline.txt	
+		dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet splash plymouth.ignore-serial-consoles
+
+	
+	
