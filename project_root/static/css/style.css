@@ -1,7 +1,7 @@
 /* style.css */
 
 #map {
-    height: 400px; /* Atur tinggi peta sesuai kebutuhan */
+    height: 100vh; /* 100% dari tinggi viewport */
     width: 100%;   /* Lebar peta memenuhi container */
 }
 
@@ -35,4 +35,8 @@ button {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 5px; /* Sudut membulat */
+    position: absolute; /* Posisikan tombol secara absolut */
+    bottom: 20px;     /* Jarak dari bawah layar */
+    left: 50%;         /* Posisikan di tengah horizontal */
+    transform: translateX(-50%); /* Geser tombol ke kiri sebesar 50% dari lebarnya */
 }
