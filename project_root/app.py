@@ -1,9 +1,13 @@
 from flask import Flask, render_template, jsonify
+from flask_caching import Cache
 import mysql.connector
 import time
 import threading
 
 app = Flask(__name__)
+# Konfigurasi cache (menggunakan in-memory cache sederhana)
+app.config['CACHE_TYPE'] = 'simple'
+cache = Cache(app)
 
 # Konfigurasi database (sesuaikan dengan pengaturan Anda)
 db_config = {
@@ -13,7 +17,8 @@ db_config = {
     'database': 'capstone'
 }
 
-# Fungsi untuk mengambil data posisi kendaraan dari database
+# Fungsi untuk mengambil data posisi kendaraan dari database (dengan caching)
+@cache.cached(timeout=5)  # Cache hasil selama 5 detik
 def get_positions():
     connection = mysql.connector.connect(**db_config)
     try:
@@ -24,7 +29,7 @@ def get_positions():
         result_user = cursor.fetchone()
 
         # Mengambil data dari tabel gps_data (kendaraan lain)
-        cursor.execute("SELECT latitude, longitude, speed, time, node FROM gps_data ORDER BY date DESC, time DESC LIMIT 3")
+        cursor.execute("SELECT latitude, longitude, speed, time, node FROM gps_data ORDER BY date DESC, time DESC LIMIT 5")
         result_others = cursor.fetchall()
 
         vehicles_positions = []
