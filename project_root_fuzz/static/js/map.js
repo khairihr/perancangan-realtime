@@ -21,7 +21,7 @@ fetch('/get_positions')
     .then(data => {
         if (data && data.user && data.others) {
             // Atur tampilan awal peta berdasarkan posisi kendaraan pengguna
-            map.setView([data.user.latitude, data.user.longitude], 13); 
+            map.setView([data.user.latitude, data.user.longitude], 13);
 
             // Simpan riwayat data awal
             historyData[data.user.node] = [data.user.speed];
@@ -37,7 +37,6 @@ fetch('/get_positions')
     })
     .catch(error => {
         console.error("Error fetching data from server:", error);
-        // Tambahkan penanganan error yang sesuai (misalnya, tampilkan pesan kesalahan di UI)
     });
 
 // Fungsi untuk memeriksa potensi bahaya
@@ -64,7 +63,7 @@ function updateMap(data) {
         markers[data.user.node] = userMarker;
     }
     userMarker.setLatLng([data.user.latitude, data.user.longitude]);
-    userMarker.bindPopup(`User Vehicle<br>Speed: ${data.user.speed} m/s<br>Last Update: ${data.user.time}`); // Tambahkan popup untuk marker pengguna
+    userMarker.bindPopup(`User Vehicle<br>Speed: ${data.user.speed} m/s<br>Last Update: ${data.user.time}`);
 
     // Update atau buat marker untuk kendaraan lain
     data.others.forEach(vehicle => {
@@ -94,7 +93,7 @@ function updateMap(data) {
         historyData[vehicle.node] = historyData[vehicle.node] || [];
         historyData[vehicle.node].push({ latitude: vehicle.latitude, longitude: vehicle.longitude, speed: vehicle.speed });
         if (historyData[vehicle.node].length > 3) {
-            historyData[vehicle.node].shift(); 
+            historyData[vehicle.node].shift();
         }
     });
 }
@@ -109,10 +108,10 @@ setInterval(() => {
 
                 // Periksa potensi bahaya setelah update marker
                 if (checkPotentialHazard([data.user.latitude, data.user.longitude], data.others)) {
-                    document.querySelector('.hazard-text').textContent = "WARNING: Potential hazard detected!"; // Ubah teks notifikasi
-                    document.getElementById('hazard-notification').style.display = 'block'; // Tampilkan notifikasi
+                    document.querySelector('.hazard-text').textContent = "WARNING: Potential hazard detected!";
+                    document.getElementById('hazard-notification').style.display = 'block';
                 } else {
-                    document.getElementById('hazard-notification').style.display = 'none'; // Sembunyikan notifikasi
+                    document.getElementById('hazard-notification').style.display = 'none';
                 }
             } else {
                 console.error("Invalid data received from server:", data);
@@ -120,15 +119,13 @@ setInterval(() => {
         })
         .catch(error => {
             console.error("Error fetching data from server:", error);
-            // Tambahkan penanganan error yang sesuai (misalnya, tampilkan pesan kesalahan di UI)
         });
-}, 1000); // Update setiap 1 detik
-
+}, 1000);
 
 // Fungsi untuk memusatkan peta ke lokasi pengguna
 function centerMapOnUser() {
-    if (markers && markers['user']) { 
-        map.setView(markers['user'].getLatLng(), 13); 
+    if (markers && markers['user']) {
+        map.setView(markers['user'].getLatLng(), 13);
     } else {
         console.warn("Marker pengguna belum ada di peta.");
     }
