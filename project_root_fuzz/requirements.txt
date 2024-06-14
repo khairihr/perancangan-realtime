@@ -1,4 +1,4 @@
 Flask
-mysql.connector
+mysql-connector-python
 math
 numpy
