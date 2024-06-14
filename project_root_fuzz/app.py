@@ -29,13 +29,20 @@ def fuzzy_or(a, b):
 
 # Fungsi untuk menghitung jarak antara dua titik koordinat (Haversine formula)
 def calculate_distance(lat1, lon1, lat2, lon2):
-    R = 6371000  # Radius bumi dalam meter
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    delta_phi = math.radians(lat2 - lat1)
-    delta_lambda = math.radians(lon2 - lon1)
+    # Radius bumi dalam meter
+    R = 6371000 
+
+    # Konversi derajat ke radian (tambahkan float())
+    phi1 = math.radians(float(lat1))
+    phi2 = math.radians(float(lat2))
+    delta_phi = math.radians(float(lat2) - float(lat1))
+    delta_lambda = math.radians(float(lon2) - float(lon1))
+
+    # Haversine formula
     a = math.sin(delta_phi / 2)**2 + math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2)**2
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    # Jarak dalam meter
     distance = R * c
     return distance
 
@@ -76,45 +83,51 @@ def get_positions():
     try:
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
+
+        # Mengambil data terbaru dari tabel selfgps (kendaraan pengguna)
         cursor.execute("SELECT latitude, longitude, speed, time FROM selfgps ORDER BY date DESC, time DESC LIMIT 1")
         result_user = cursor.fetchone()
+
         if result_user is None:
             return jsonify({'error': 'User data not found'})
+
+        # Mengambil data dari tabel gps_data (kendaraan lain)
         cursor.execute("SELECT latitude, longitude, speed, time, node FROM gps_data ORDER BY date DESC, time DESC LIMIT 10")
         result_others = cursor.fetchall()
+
         vehicles_positions = []
         for row in result_others:
-            distance = calculate_distance(result_user['latitude'], result_user['longitude'], float(row['latitude']), float(row['longitude']))
-            relative_speed = row['speed'] - result_user['speed'] if result_user['speed'] != 0 else 0
-            safe_distance = calculate_safe_distance(result_user['speed'], distance, relative_speed)
+            # Hitung jarak dan selisih kecepatan (tambahkan float())
+            distance = calculate_distance(float(result_user['latitude']), float(result_user['longitude']), float(row['latitude']), float(row['longitude']))
+            relative_speed = float(row['speed']) - float(result_user['speed']) if float(result_user['speed']) != 0 else 0
+
+            # Tentukan jarak aman menggunakan logika fuzzy
+            safe_distance = calculate_safe_distance(float(result_user['speed']), distance, relative_speed)
+
             vehicles_positions.append({
                 'latitude': float(row['latitude']),
                 'longitude': float(row['longitude']),
-                'speed': row['speed'],
+                'speed': float(row['speed']),
                 'time': row['time'],
                 'node': row['node'],
-                'safe_distance': safe_distance,
-                'distance': distance
+                'safe_distance': float(safe_distance),
+                'distance': float(distance)
             })
+
         return {
-            'user': result_user,
+            'user': {
+                'latitude': float(result_user['latitude']),
+                'longitude': float(result_user['longitude']),
+                'speed': float(result_user['speed']),
+                'time': result_user['time']
+            },
             'others': vehicles_positions
         }
+
     except mysql.connector.Error as err:
-        print("Error connecting to database: {}".format(err))
+        print(f"Error connecting to database: {err}")
         return jsonify({'error': 'Database error'})
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
-
-@app.route('/')
-def index():
-    return render_template('map.html')
-
-@app.route('/get_positions')
-def get_positions_endpoint():
-    return jsonify(get_positions())
-
-if __name__ == '__main__':
-    app.run(debug=True)
