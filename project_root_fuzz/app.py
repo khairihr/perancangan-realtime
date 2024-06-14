@@ -5,7 +5,7 @@ import numpy as np
 
 app = Flask(__name__)
 
-# Konfigurasi database (sesuaikan dengan pengaturan Anda)
+# Konfigurasi database
 db_config = {
     'host': 'localhost',
     'user': 'root',
@@ -15,7 +15,13 @@ db_config = {
 
 # Fungsi keanggotaan (membership functions)
 def triangular(x, a, b, c):
-    return max(min((x - a) / (b - a), (c - x) / (c - b)), 0)
+    if b - a == 0:
+        return np.where(np.isclose(x, a), 1, 0)  # Use np.isclose for element-wise comparison with tolerance
+    elif c - b == 0:
+        return np.where(np.isclose(x, c), 1, 0)  # Use np.isclose for element-wise comparison with tolerance
+    else:
+        return np.maximum(np.minimum((x - a) / (b - a), (c - x) / (c - b)), 0)
+
 
 def trapezoidal(x, a, b, c, d):
     return max(min((x - a) / (b - a), 1, (d - x) / (d - c)), 0)
@@ -75,6 +81,10 @@ def calculate_safe_distance(kecepatan, jarak, selisih_kecepatan):
     panjang_centroid = np.average(jarak_aman_universe, weights=jarak_aman_panjang)
     numerator = activation_pendek * pendek_centroid + activation_sedang * sedang_centroid + activation_panjang * panjang_centroid
     denominator = activation_pendek + activation_sedang + activation_panjang
+     # Handle zero denominator
+    if denominator == 0:
+        return 50  # atau nilai default lainnya yang sesuai
+
     safe_distance = numerator / denominator
     return safe_distance
 
