@@ -7,7 +7,7 @@ import math
 
 app = Flask(__name__)
 
-# Konfigurasi database (sesuaikan dengan pengaturan Anda)
+# Konfigurasi database
 db_config = {
     'host': 'localhost',
     'user': 'root',
@@ -38,7 +38,7 @@ jarak_aman['pendek'] = fuzz.trimf(jarak_aman.universe, [0, 0, 20])
 jarak_aman['sedang'] = fuzz.trimf(jarak_aman.universe, [10, 50, 90])
 jarak_aman['panjang'] = fuzz.trimf(jarak_aman.universe, [80, 100, 100])
 
-# Definisi aturan fuzzy (lengkapi sesuai kebutuhan)
+# Definisi aturan fuzzy 
 rule1 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['dekat'] & selisih_kecepatan['negatif'], jarak_aman['pendek'])
 rule2 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['dekat'] & selisih_kecepatan['nol'], jarak_aman['sedang'])
 rule3 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['dekat'] & selisih_kecepatan['positif'], jarak_aman['panjang'])
@@ -46,7 +46,7 @@ rule4 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['sedang'] & selis
 rule5 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['sedang'] & selisih_kecepatan['nol'], jarak_aman['sedang'])
 rule6 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['sedang'] & selisih_kecepatan['positif'], jarak_aman['panjang'])
 
-jarak_aman_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6])  # Tambahkan semua aturan Anda di sini
+jarak_aman_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6]) 
 jarak_aman_sim = ctrl.ControlSystemSimulation(jarak_aman_ctrl)
 
 # Fungsi untuk mengambil data posisi kendaraan dari database
