@@ -131,3 +131,14 @@ def get_positions():
         if connection.is_connected():
             cursor.close()
             connection.close()
+
+@app.route('/')
+def index():
+    return render_template('map.html')
+
+@app.route('/get_positions')
+def get_positions_endpoint():
+    return jsonify(get_positions())
+
+if __name__ == '__main__':
+    app.run(debug=True)
