@@ -38,7 +38,7 @@ jarak_aman['pendek'] = fuzz.trimf(jarak_aman.universe, [0, 0, 20])
 jarak_aman['sedang'] = fuzz.trimf(jarak_aman.universe, [10, 50, 90])
 jarak_aman['panjang'] = fuzz.trimf(jarak_aman.universe, [80, 100, 100])
 
-# Definisi aturan fuzzy
+# Definisi aturan fuzzy (lengkapi sesuai kebutuhan)
 rule1 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['dekat'] & selisih_kecepatan['negatif'], jarak_aman['pendek'])
 rule2 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['dekat'] & selisih_kecepatan['nol'], jarak_aman['sedang'])
 rule3 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['dekat'] & selisih_kecepatan['positif'], jarak_aman['panjang'])
@@ -46,19 +46,21 @@ rule4 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['sedang'] & selis
 rule5 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['sedang'] & selisih_kecepatan['nol'], jarak_aman['sedang'])
 rule6 = ctrl.Rule(kecepatan_saat_ini['lambat'] & selisih_jarak['sedang'] & selisih_kecepatan['positif'], jarak_aman['panjang'])
 
-# Buat sistem kontrol fuzzy
 jarak_aman_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6])  # Tambahkan semua aturan Anda di sini
 jarak_aman_sim = ctrl.ControlSystemSimulation(jarak_aman_ctrl)
 
 # Fungsi untuk mengambil data posisi kendaraan dari database
 def get_positions():
-    connection = mysql.connector.connect(**db_config)
     try:
+        connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
 
         # Mengambil data terbaru dari tabel selfgps (kendaraan pengguna)
         cursor.execute("SELECT latitude, longitude, speed, time FROM selfgps ORDER BY date DESC, time DESC LIMIT 1")
         result_user = cursor.fetchone()
+
+        if result_user is None:
+            return jsonify({'error': 'User data not found'})
 
         # Mengambil data dari tabel gps_data (kendaraan lain)
         cursor.execute("SELECT latitude, longitude, speed, time, node FROM gps_data ORDER BY date DESC, time DESC LIMIT 10")
@@ -68,7 +70,7 @@ def get_positions():
         for row in result_others:
             # Hitung jarak dan selisih kecepatan
             distance = calculate_distance(result_user['latitude'], result_user['longitude'], float(row['latitude']), float(row['longitude']))
-            relative_speed = row['speed'] - result_user['speed']
+            relative_speed = row['speed'] - result_user['speed'] if result_user['speed'] != 0 else 0
 
             # Tentukan jarak aman menggunakan logika fuzzy
             jarak_aman_sim.input['kecepatan_saat_ini'] = result_user['speed']
@@ -92,14 +94,18 @@ def get_positions():
             'others': vehicles_positions
         }
 
+    except mysql.connector.Error as err:
+        print(f"Error connecting to database: {err}")
+        return jsonify({'error': 'Database error'})
     finally:
-        cursor.close()
-        connection.close()
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 
-# Fungsi untuk menghitung jarak antara dua titik koordinat
+# Fungsi untuk menghitung jarak antara dua titik koordinat (Haversine formula)
 def calculate_distance(lat1, lon1, lat2, lon2):
     # Radius bumi dalam meter
-    R = 6371000 
+    R = 6371000
 
     # Konversi derajat ke radian
     phi1 = math.radians(lat1)
@@ -114,6 +120,7 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     # Jarak dalam meter
     distance = R * c
     return distance
+
 # Route utama untuk menampilkan halaman peta
 @app.route('/')
 def index():
