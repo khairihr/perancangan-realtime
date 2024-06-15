@@ -1,15 +1,17 @@
 /* style.css */
 
+/* Tampilan Peta */
 #map {
     height: 400px; /* Atur tinggi peta sesuai kebutuhan */
     width: 100%;   /* Lebar peta memenuhi container */
 }
 
+/* Popup Marker */
 .leaflet-popup-content {
     font-size: 14px; /* Ukuran font konten popup */
 }
 
-/* Styling untuk notifikasi bahaya */
+/* Notifikasi Bahaya */
 .hazard-notification {
     background-color: yellow;
     color: black;
@@ -20,9 +22,22 @@
     top: 10px;
     right: 10px;
     z-index: 1000; /* Pastikan notifikasi berada di atas peta */
+    display: flex; /* Gunakan flexbox untuk tata letak */
+    align-items: center; /* Sejajarkan item secara vertikal di tengah */
 }
 
-/* Styling untuk tombol */
+/* Ikon Notifikasi */
+.hazard-icon {
+    font-size: 24px; /* Ukuran ikon */
+    margin-right: 10px; /* Jarak antara ikon dan teks */
+}
+
+/* Teks Notifikasi */
+.hazard-text {
+    font-size: 16px;
+}
+
+/* Tombol */
 button {
     background-color: #4CAF50; /* Hijau */
     border: none;
