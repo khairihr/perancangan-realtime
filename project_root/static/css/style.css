@@ -2,8 +2,10 @@
 
 /* Tampilan Peta */
 #map {
-    height: 400px; /* Atur tinggi peta sesuai kebutuhan */
+    height: 100vh; /* Atur tinggi peta menjadi 100% dari tinggi viewport */
     width: 100%;   /* Lebar peta memenuhi container */
+    margin: 0;     /* Hilangkan margin untuk peta */
+    padding: 0;    /* Hilangkan padding untuk peta */
 }
 
 /* Popup Marker */
@@ -35,19 +37,4 @@
 /* Teks Notifikasi */
 .hazard-text {
     font-size: 16px;
-}
-
-/* Tombol */
-button {
-    background-color: #4CAF50; /* Hijau */
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 5px; /* Sudut membulat */
 }
