@@ -144,7 +144,7 @@ def get_positions():
         }
 
     except mysql.connector.Error as err:
-        print(f"Error connecting to database: {err}")
+        print("Error connecting to database: {}".format(err))
         return jsonify({'error': 'Database error'})
     finally:
         if connection.is_connected():
@@ -154,7 +154,7 @@ def get_positions():
 def download_tile(z, x, y):
     for s in SUBDOMAINS:
         url = TILE_URL.format(s=s, z=z, x=x, y=y)
-        tile_path = os.path.join(TILE_DIR, str(z), str(x), f'{y}.png')
+        tile_path = os.path.join(TILE_DIR, str(z), str(x), '{}.png'.format(y))
         if not os.path.exists(tile_path):
             os.makedirs(os.path.dirname(tile_path), exist_ok=True)
             try:
@@ -162,10 +162,10 @@ def download_tile(z, x, y):
                 response.raise_for_status()
                 with open(tile_path, 'wb') as f:
                     f.write(response.content)
-                print(f"Downloaded tile: {z}/{x}/{y}")
+                print("Downloaded tile: {}/{}/{}".format(z, x, y))
                 return True
             except requests.exceptions.RequestException as e:
-                print(f"Error downloading tile from subdomain '{s}': {e}")
+                print("Error downloading tile from subdomain '{}': {}".format(s, e))
                 time.sleep(2)  # Add a delay to avoid rate limiting
     return False  # Failed to download from all subdomains
 
@@ -179,11 +179,11 @@ def get_positions_endpoint():
 
 @app.route('/tiles_bojongsoang/<int:z>/<int:x>/<int:y>.png')
 def tiles(z, x, y):
-    tile_path = os.path.join(TILE_DIR, str(z), str(x), f'{y}.png')
+    tile_path = os.path.join(TILE_DIR, str(z), str(x), '{}.png'.format(y))
     if not os.path.exists(tile_path):
         download_tile(z, x, y)
     if os.path.exists(tile_path):
-        return send_from_directory(os.path.join(TILE_DIR, str(z), str(x)), f'{y}.png')
+        return send_from_directory(os.path.join(TILE_DIR, str(z), str(x)), '{}.png'.format(y))
     else:
         return jsonify({'error': 'Tile not found'}), 404
 
