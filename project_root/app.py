@@ -151,23 +151,23 @@ def get_positions():
             cursor.close()
             connection.close()
 
-def download_tile(z, x, y):
-    for s in SUBDOMAINS:
-        url = TILE_URL.format(s=s, z=z, x=x, y=y)
-        tile_path = os.path.join(TILE_DIR, str(z), str(x), '{}.png'.format(y))
-        if not os.path.exists(tile_path):
-            os.makedirs(os.path.dirname(tile_path), exist_ok=True)
-            try:
-                response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
-                response.raise_for_status()
-                with open(tile_path, 'wb') as f:
-                    f.write(response.content)
-                print("Downloaded tile: {}/{}/{}".format(z, x, y))
-                return True
-            except requests.exceptions.RequestException as e:
-                print("Error downloading tile from subdomain '{}': {}".format(s, e))
-                time.sleep(2)  # Add a delay to avoid rate limiting
-    return False  # Failed to download from all subdomains
+# def download_tile(z, x, y):
+#     for s in SUBDOMAINS:
+#         url = TILE_URL.format(s=s, z=z, x=x, y=y)
+#         tile_path = os.path.join(TILE_DIR, str(z), str(x), '{}.png'.format(y))
+#         if not os.path.exists(tile_path):
+#             os.makedirs(os.path.dirname(tile_path), exist_ok=True)
+#             try:
+#                 response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+#                 response.raise_for_status()
+#                 with open(tile_path, 'wb') as f:
+#                     f.write(response.content)
+#                 print("Downloaded tile: {}/{}/{}".format(z, x, y))
+#                 return True
+#             except requests.exceptions.RequestException as e:
+#                 print("Error downloading tile from subdomain '{}': {}".format(s, e))
+#                 time.sleep(2)  # Add a delay to avoid rate limiting
+#     return False  # Failed to download from all subdomains
 
 @app.route('/')
 def index():
@@ -180,8 +180,8 @@ def get_positions_endpoint():
 @app.route('/tiles_bojongsoang/<int:z>/<int:x>/<int:y>.png')
 def tiles(z, x, y):
     tile_path = os.path.join(TILE_DIR, str(z), str(x), '{}.png'.format(y))
-    if not os.path.exists(tile_path):
-        download_tile(z, x, y)
+    # if not os.path.exists(tile_path):
+    #     download_tile(z, x, y)
     if os.path.exists(tile_path):
         return send_from_directory(os.path.join(TILE_DIR, str(z), str(x)), '{}.png'.format(y))
     else:
