@@ -3,7 +3,7 @@ var map = L.map('map');
 
 
 // Tambahkan layer peta OpenStreetMap
-L.tileLayer('/bandung/{z}/{x}/{y}.png', {
+L.tileLayer('/Bandung/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 16,
     minZoom: 15,
