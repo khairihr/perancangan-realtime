@@ -10,6 +10,9 @@ L.tileLayer('/tiles_bojongsoang/{z}/{x}/{y}.png', {
 var markers = {};
 var historyData = {};
 
+// Flag untuk menentukan apakah peta harus mengikuti pengguna
+var followUser = true;
+
 // Ambil data posisi awal dari server
 fetch('/get_positions')
     .then(response => {
@@ -65,8 +68,10 @@ function updateMap(data) {
     userMarker.setLatLng([data.user.latitude, data.user.longitude]);
     userMarker.bindPopup(`User Vehicle<br>Speed: ${data.user.speed} m/s<br>Last Update: ${data.user.time}`);
 
-    // Memusatkan peta ke lokasi pengguna
-    map.setView([data.user.latitude, data.user.longitude], map.getZoom());
+    // Pusatkan peta pada posisi pengguna jika followUser aktif
+    if (followUser) {
+        map.setView([data.user.latitude, data.user.longitude], 13);
+    }
 
     // Update atau buat marker untuk kendaraan lain
     data.others.forEach(vehicle => {
@@ -124,3 +129,18 @@ setInterval(() => {
             console.error("Error fetching data from server:", error);
         });
 }, 1000);
+
+// Fungsi untuk memusatkan peta ke lokasi pengguna
+function centerMapOnUser() {
+    followUser = true; // Aktifkan mode follow
+    if (markers && markers['user']) {
+        map.setView(markers['user'].getLatLng(), 13);
+    } else {
+        console.warn("Marker pengguna belum ada di peta.");
+    }
+}
+
+// Tambahkan event listener untuk mematikan mode follow ketika peta digerakkan secara manual
+map.on('movestart', function() {
+    followUser = false; // Nonaktifkan mode follow ketika pengguna memindahkan peta secara manual
+});
