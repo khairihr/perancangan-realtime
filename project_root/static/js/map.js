@@ -1,7 +1,6 @@
 // Inisialisasi peta (tanpa koordinat awal)
 var map = L.map('map');
 
-
 // Tambahkan layer peta OpenStreetMap
 L.tileLayer('/Bandung/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -30,7 +29,6 @@ fetch('/get_positions')
             data.others.forEach(vehicle => {
                 historyData[vehicle.node] = [vehicle.speed];
             });
-
         } else {
             console.error("Invalid data received from server:", data);
         }
@@ -106,7 +104,7 @@ setInterval(() => {
             if (data && data.user && data.others) {
                 updateMap(data);
                 map.setView([data.user.latitude, data.user.longitude], 16);
-                
+
                 // Periksa potensi bahaya setelah update marker
                 if (checkPotentialHazard([data.user.latitude, data.user.longitude], data.others)) {
                     document.querySelector('.hazard-text').textContent = "WARNING: Potential hazard detected!";
@@ -122,3 +120,4 @@ setInterval(() => {
             console.error("Error fetching data from server:", error);
         });
 }, 500);
+
