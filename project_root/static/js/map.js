@@ -6,7 +6,7 @@ var map = L.map('map');
 L.tileLayer('/bandung/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 16,
-    minZoom: 14,
+    minZoom: 15,
     tileSize: 512,
     zoomOffset: -1
 }).addTo(map);
@@ -25,17 +25,12 @@ fetch('/get_positions')
     })
     .then(data => {
         if (data && data.user && data.others) {
-            // Atur tampilan awal peta berdasarkan posisi kendaraan pengguna
-            //map.setView([data.user.latitude, data.user.longitude], 16);
-
             // Simpan riwayat data awal
             historyData[data.user.node] = [data.user.speed];
             data.others.forEach(vehicle => {
                 historyData[vehicle.node] = [vehicle.speed];
             });
 
-            // Tambahkan marker awal
-            //updateMap(data);
         } else {
             console.error("Invalid data received from server:", data);
         }
@@ -69,10 +64,6 @@ function updateMap(data) {
     }
     userMarker.setLatLng([data.user.latitude, data.user.longitude]);
     userMarker.bindPopup(`User Vehicle<br>Speed: ${data.user.speed} m/s<br>Last Update: ${data.user.time}`);
-
-    userMarker.on('move', function() {
-        map.setView([data.user.latitude, data.user.longitude], 16);
-    });
 
     // Update atau buat marker untuk kendaraan lain
     data.others.forEach(vehicle => {
@@ -114,7 +105,8 @@ setInterval(() => {
         .then(data => {
             if (data && data.user && data.others) {
                 updateMap(data);
-
+                map.setView([data.user.latitude, data.user.longitude], 16);
+                
                 // Periksa potensi bahaya setelah update marker
                 if (checkPotentialHazard([data.user.latitude, data.user.longitude], data.others)) {
                     document.querySelector('.hazard-text').textContent = "WARNING: Potential hazard detected!";
@@ -129,9 +121,4 @@ setInterval(() => {
         .catch(error => {
             console.error("Error fetching data from server:", error);
         });
-}, 1000);
-
-// // Tambahkan event listener untuk mematikan mode follow ketika peta digerakkan secara manual
-// map.on('movestart', function() {
-//     followUser = false; // Nonaktifkan mode follow ketika pengguna memindahkan peta secara manual
-// });
+}, 500);
