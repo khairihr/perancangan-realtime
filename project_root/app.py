@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Tile configuration
 TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-TILE_DIR = 'bandung'  # Directory for offline tiles
+TILE_DIR = 'Bandung'  # Directory for offline tiles
 
 # Tile download subdomains
 SUBDOMAINS = ['a', 'b', 'c']
@@ -159,7 +159,7 @@ def index():
 def get_positions_endpoint():
     return jsonify(get_positions())
 
-@app.route('/bandung/<int:z>/<int:x>/<int:y>.png')
+@app.route('/Bandung/<int:z>/<int:x>/<int:y>.png')
 def tiles(z, x, y):
     tile_path = os.path.join(TILE_DIR, str(z), str(x), '{}.png'.format(y))
     # if not os.path.exists(tile_path):
