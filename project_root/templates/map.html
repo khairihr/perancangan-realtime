@@ -8,8 +8,10 @@
 </head>
 <body>
     <div id="map"></div>
-    <div id="hazard-notification" class="hazard-notification" style="display: none;">WARNING: Potential hazard detected!</div>
-
+    <div id="hazard-notification" class="hazard-notification" style="display: none;">
+        <span class="hazard-icon">&#9888;</span> <span class="hazard-text">WARNING: Potential hazard detected!</span>
+    </div>
+    
     <button onclick="centerMapOnUser()">Pusatkan Peta ke Lokasi Saya</button>
 
     <script src="{{ url_for('static', filename='js/map.js') }}"></script> 
