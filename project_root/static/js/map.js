@@ -65,6 +65,9 @@ function updateMap(data) {
     userMarker.setLatLng([data.user.latitude, data.user.longitude]);
     userMarker.bindPopup(`User Vehicle<br>Speed: ${data.user.speed} m/s<br>Last Update: ${data.user.time}`);
 
+    // Memusatkan peta ke lokasi pengguna
+    map.setView([data.user.latitude, data.user.longitude], map.getZoom());
+
     // Update atau buat marker untuk kendaraan lain
     data.others.forEach(vehicle => {
         let marker = markers[vehicle.node];
@@ -121,12 +124,3 @@ setInterval(() => {
             console.error("Error fetching data from server:", error);
         });
 }, 1000);
-
-// Fungsi untuk memusatkan peta ke lokasi pengguna
-function centerMapOnUser() {
-    if (markers && markers['user']) {
-        map.setView(markers['user'].getLatLng(), 13);
-    } else {
-        console.warn("Marker pengguna belum ada di peta.");
-    }
-}
