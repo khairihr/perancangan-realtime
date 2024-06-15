@@ -1,17 +1,19 @@
 // Inisialisasi peta (tanpa koordinat awal)
 var map = L.map('map');
 
+
 // Tambahkan layer peta OpenStreetMap
-L.tileLayer('/tiles_bojongsoang/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+L.tileLayer('/bandung/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 16,
+    minZoom: 14,
+    tileSize: 512,
+    zoomOffset: -1
 }).addTo(map);
 
 // Objek untuk menyimpan marker dan data riwayat
 var markers = {};
 var historyData = {};
-
-// Flag untuk menentukan apakah peta harus mengikuti pengguna
-var followUser = true;
 
 // Ambil data posisi awal dari server
 fetch('/get_positions')
@@ -24,7 +26,7 @@ fetch('/get_positions')
     .then(data => {
         if (data && data.user && data.others) {
             // Atur tampilan awal peta berdasarkan posisi kendaraan pengguna
-            map.setView([data.user.latitude, data.user.longitude], 13);
+            //map.setView([data.user.latitude, data.user.longitude], 16);
 
             // Simpan riwayat data awal
             historyData[data.user.node] = [data.user.speed];
@@ -33,7 +35,7 @@ fetch('/get_positions')
             });
 
             // Tambahkan marker awal
-            updateMap(data);
+            //updateMap(data);
         } else {
             console.error("Invalid data received from server:", data);
         }
@@ -68,10 +70,9 @@ function updateMap(data) {
     userMarker.setLatLng([data.user.latitude, data.user.longitude]);
     userMarker.bindPopup(`User Vehicle<br>Speed: ${data.user.speed} m/s<br>Last Update: ${data.user.time}`);
 
-    // Pusatkan peta pada posisi pengguna jika followUser aktif
-    if (followUser) {
-        map.setView([data.user.latitude, data.user.longitude], 13);
-    }
+    userMarker.on('move', function() {
+        map.setView([data.user.latitude, data.user.longitude], 16);
+    });
 
     // Update atau buat marker untuk kendaraan lain
     data.others.forEach(vehicle => {
@@ -130,17 +131,7 @@ setInterval(() => {
         });
 }, 1000);
 
-// Fungsi untuk memusatkan peta ke lokasi pengguna
-function centerMapOnUser() {
-    followUser = true; // Aktifkan mode follow
-    if (markers && markers['user']) {
-        map.setView(markers['user'].getLatLng(), 13);
-    } else {
-        console.warn("Marker pengguna belum ada di peta.");
-    }
-}
-
-// Tambahkan event listener untuk mematikan mode follow ketika peta digerakkan secara manual
-map.on('movestart', function() {
-    followUser = false; // Nonaktifkan mode follow ketika pengguna memindahkan peta secara manual
-});
+// // Tambahkan event listener untuk mematikan mode follow ketika peta digerakkan secara manual
+// map.on('movestart', function() {
+//     followUser = false; // Nonaktifkan mode follow ketika pengguna memindahkan peta secara manual
+// });
