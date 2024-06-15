@@ -5,7 +5,7 @@
 }
 
 .leaflet-popup-content {
-    font-size: 14px; /* Ukuran font konten popup */
+    display: none;
 }
 
 /* Styling untuk notifikasi bahaya */
