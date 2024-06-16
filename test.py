@@ -6,6 +6,6 @@ while True:
     f = open("/home/pi/test.txt", "w")
     print(i)
     i += 1
-    f.write(i + "\n")
+    f.write(str(i) + "\n")
     f.close()
-    time.sleep(1000)
+    time.sleep(0.5)
