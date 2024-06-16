@@ -5,9 +5,7 @@ var map = L.map('map');
 L.tileLayer('/Bandung/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 16,
-    minZoom: 15,
-    tileSize: 512,
-    zoomOffset: -1
+    minZoom: 15
 }).addTo(map);
 
 // Objek untuk menyimpan marker dan data riwayat
