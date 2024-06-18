@@ -126,7 +126,7 @@ int main (int argc, const char* argv[] )
   std::string new1;
   static unsigned long last_millis;
   long lastSendTime = 0;
-  int interval;
+  int interval = 500;
   srand(time(NULL));
 
   unsigned long led_blink = 0;
@@ -279,7 +279,7 @@ int main (int argc, const char* argv[] )
         // } else {
         //   printf("No reply\n");
         // }
-      printf("\n");
+      //printf("\n");
 
       // Let OS doing other tasks
       // For timed critical appliation you can reduce or delete
