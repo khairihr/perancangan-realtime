@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Tile configuration
 TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-TILE_DIR = 'Bandung'  # Directory for offline tiles
+TILE_DIR = '/home/pi/perancangan-realtime/project_root/Bandung'  # Directory for offline tiles
 
 # Tile download subdomains
 SUBDOMAINS = ['a', 'b', 'c']
