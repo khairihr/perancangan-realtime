@@ -111,7 +111,17 @@ def get_positions():
             return jsonify({'error': 'User data not found'})
 
         # Mengambil data dari tabel gps_data (kendaraan lain)
-        cursor.execute("SELECT latitude, longitude, speed, time, node FROM gps_data GROUP BY node ORDER BY date DESC, time DESC LIMIT 10")
+        cursor.execute("""
+            SELECT t1.latitude, t1.longitude, t1.speed, t1.time, t1.node
+            FROM gps_data t1
+            INNER JOIN (
+                SELECT node, MAX(CONCAT(date, ' ', time)) as max_datetime
+                FROM gps_data
+                GROUP BY node
+            ) t2
+            ON t1.node = t2.node AND CONCAT(t1.date, ' ', t1.time) = t2.max_datetime
+            ORDER BY t1.node
+        """)
         result_others = cursor.fetchall()
 
         vehicles_positions = []
