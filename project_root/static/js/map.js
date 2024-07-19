@@ -118,4 +118,3 @@ setInterval(() => {
             console.error("Error fetching data from server:", error);
         });
 }, 500);
-
